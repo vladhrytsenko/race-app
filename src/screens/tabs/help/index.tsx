@@ -1,13 +1,17 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {styles} from './styles.ts';
+import ScanQRCode from './ScanQRCode';
+import ScanningResult from './ScanningResult';
+
+const Stack = createNativeStackNavigator();
 
 const Help = () => {
   return (
-    <View style={styles.container}>
-      <Text>Help</Text>
-    </View>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="ScanQRCode" component={ScanQRCode} />
+      <Stack.Screen name="ScanningResult" component={ScanningResult} />
+    </Stack.Navigator>
   );
 };
 

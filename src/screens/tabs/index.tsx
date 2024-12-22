@@ -5,7 +5,7 @@ import {styles} from './styles';
 import Calendar from './calendar';
 import Tracks from './tracks';
 import Help from './help';
-import Repair from './repeir';
+import Repair from './repair';
 import Leaderboard from './leaderboard';
 import CalendarIcon from '../../components/svgs/CalendarIcon.tsx';
 import TracksIcon from '../../components/svgs/TracksIcon.tsx';
