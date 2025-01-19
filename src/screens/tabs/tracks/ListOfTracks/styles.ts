@@ -5,12 +5,16 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
   },
-  tabTextContainerStyle: {
+  tabContainerStyle: {
     backgroundColor: '#000000',
     borderRadius: 18,
   },
-  tabTextContainerActiveStyle: {
+  tabContainerActiveStyle: {
     backgroundColor: '#3F7E01',
+  },
+  backgroundImage: {
+    height: 300,
+    width: '100%',
   },
   tabText: {
     color: '#FFFFFF',
@@ -30,10 +34,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   tabsContainerStyle: {
-    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   contentContainer: {
     padding: 16,
+    backgroundColor: '#000000',
   },
   contentHeaderContainer: {
     flexDirection: 'row',

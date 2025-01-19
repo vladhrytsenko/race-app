@@ -1,10 +1,8 @@
 import React from 'react';
-import {NativeScrollEvent, Pressable, Text, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {TabbedHeaderPager} from 'react-native-sticky-parallax-header';
-import {useSharedValue} from 'react-native-reanimated';
+import {ScrollView, Pressable, Text, View, Image} from 'react-native';
 
 import {styles} from './styles.ts';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface IReservationInfo {
   navigation: any;
@@ -12,6 +10,8 @@ interface IReservationInfo {
 }
 
 const ReservationInfo = ({navigation, route}: IReservationInfo) => {
+  const {top} = useSafeAreaInsets();
+
   const {
     imageSrc,
     title,
@@ -24,23 +24,11 @@ const ReservationInfo = ({navigation, route}: IReservationInfo) => {
     distance,
   } = route.params;
 
-  const {top} = useSafeAreaInsets();
-  const scrollValue = useSharedValue(0);
-
-  const onScroll = (e: NativeScrollEvent) => {
-    'worklet';
-
-    scrollValue.value = e.contentOffset.y;
-  };
-
   return (
-    <TabbedHeaderPager
-      containerStyle={styles.screenContainer}
-      backgroundImage={imageSrc}
-      title={title}
-      titleStyle={styles.titleStyle}
-      onScroll={onScroll}
+    <ScrollView
+      style={[styles.screenContainer, {paddingTop: top + 16}]}
       showsVerticalScrollIndicator={false}>
+      <Image source={imageSrc} style={styles.backgroundImage} />
       <View style={styles.contentContainer}>
         <Text style={styles.bookingInfoTitle}>Booking info</Text>
         <View style={styles.bookingInfoWrapper}>
@@ -75,7 +63,7 @@ const ReservationInfo = ({navigation, route}: IReservationInfo) => {
           <Text style={styles.buttonText}>Back</Text>
         </Pressable>
       </View>
-    </TabbedHeaderPager>
+    </ScrollView>
   );
 };
 

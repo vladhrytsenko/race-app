@@ -12,6 +12,11 @@ export const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 16,
+    backgroundColor: '#000000',
+  },
+  backgroundImage: {
+    height: 300,
+    width: '100%',
   },
   bookingInfoTitle: {
     fontSize: 22,

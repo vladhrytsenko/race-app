@@ -1,8 +1,6 @@
-import React, {useState} from 'react';
-import {NativeScrollEvent, Pressable, Text, View} from 'react-native';
+import React, {useMemo, useState} from 'react';
+import {Image, Pressable, ScrollView, Text, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {TabbedHeaderPager} from 'react-native-sticky-parallax-header';
-import {useSharedValue} from 'react-native-reanimated';
 
 import {styles} from './styles.ts';
 import {tracks} from '../../../../assets/data/tracks.ts';
@@ -14,16 +12,13 @@ interface IListOfTracks {
 
 const ListOfTracks = ({navigation}: IListOfTracks) => {
   const {top} = useSafeAreaInsets();
-  const scrollValue = useSharedValue(0);
 
   const [activeTab, setActiveTab] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onScroll = (e: NativeScrollEvent) => {
-    'worklet';
-
-    scrollValue.value = e.contentOffset.y;
-  };
+  const data = useMemo(() => {
+    return tracks[activeTab];
+  }, [activeTab]);
 
   const onNext = () => {
     setLoading(true);
@@ -40,42 +35,58 @@ const ListOfTracks = ({navigation}: IListOfTracks) => {
   return (
     <>
       {loading && <Loader />}
-      <TabbedHeaderPager
-        containerStyle={styles.screenContainer}
-        backgroundImage={tracks[activeTab].imageSrc}
-        tabTextContainerStyle={styles.tabTextContainerStyle}
-        tabTextContainerActiveStyle={styles.tabTextContainerActiveStyle}
-        tabTextStyle={styles.tabText}
-        tabTextActiveStyle={styles.tabTextActiveStyle}
-        tabWrapperStyle={styles.tabWrapperStyle}
-        tabsContainerStyle={[styles.tabsContainerStyle, {paddingTop: top}]}
-        onScroll={onScroll}
-        tabs={tracks}
-        onChangeTab={(_, index) => setActiveTab(index)}
+
+      <ScrollView
+        style={[styles.screenContainer, {paddingTop: top + 16}]}
         showsVerticalScrollIndicator={false}>
-        {tracks.map((tab, i) => (
-          <View key={i} style={styles.contentContainer}>
-            <View style={styles.contentHeaderContainer}>
-              <Text style={styles.contentTitle}>
-                {tab.title}{' '}
-                <Text style={styles.contentComplexity}>{tab.complexity}</Text>
-              </Text>
-              <Text style={styles.contentText}>{tab.distance}km</Text>
-            </View>
+        <Image source={data.imageSrc} style={styles.backgroundImage} />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.tabsContainerStyle}>
+          {tracks.map((track, i) => {
+            const isActive = track.title === data.title;
 
-            <Text style={styles.contentText}>{tab.description}</Text>
-
-            <Pressable
-              style={({pressed}) => [
-                styles.buttonContainer,
-                pressed && styles.onPress,
-              ]}
-              onPress={onNext}>
-              <Text style={styles.buttonText}>Next</Text>
-            </Pressable>
+            return (
+              <Pressable
+                key={track.title}
+                style={[
+                  styles.tabContainerStyle,
+                  isActive && styles.tabContainerActiveStyle,
+                ]}
+                onPress={() => setActiveTab(i)}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    isActive && styles.tabTextActiveStyle,
+                  ]}>
+                  {track.title}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+        <View style={styles.contentContainer}>
+          <View style={styles.contentHeaderContainer}>
+            <Text style={styles.contentTitle}>
+              {data.title}{' '}
+              <Text style={styles.contentComplexity}>{data.complexity}</Text>
+            </Text>
+            <Text style={styles.contentText}>{data.distance}km</Text>
           </View>
-        ))}
-      </TabbedHeaderPager>
+
+          <Text style={styles.contentText}>{data.description}</Text>
+
+          <Pressable
+            style={({pressed}) => [
+              styles.buttonContainer,
+              pressed && styles.onPress,
+            ]}
+            onPress={onNext}>
+            <Text style={styles.buttonText}>Next</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </>
   );
 };
